@@ -25,10 +25,27 @@
         mapboxgl.accessToken = 'pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg';
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/streets-v11',
+            style: 'mapbox://styles/mapbox/dark-v11',
             center: [104.06667, 30.66667],
             zoom: 4
         });
+
+        // 创建一个标注并添加到地图上
+		var marker = new mapboxgl.Marker({
+			color: '#FF0000', // 设置标注颜色
+			draggable: true // 设置标注是否可拖动
+		})
+			.setLngLat([118.91,32.11]) // 设置标注坐标
+			.addTo(map);
+
+		// 在标注上添加中文标签
+		var popup = new mapboxgl.Popup({
+			closeButton: false,
+			closeOnClick: false
+		})
+			.setLngLat([118.91,32.11])
+			.setHTML("<p>fty第二故乡</p>")
+			.addTo(map);
     </script>
 </body>
 </html>
