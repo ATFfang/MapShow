@@ -35,11 +35,45 @@
 			color: #333333;
 			outline: none;
 		}
+
+		#layer-switch {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+			z-index: 2;
+			padding: 10px;
+			background-color: #207ce600;
+			border: 1px solid #cccccc00;
+			border-radius: 4px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			font-size: 16px;
+			line-height: 1.5;
+			color: #3d48dc;
+			outline: none;
+			flex-direction: column;
+		}
+		#layer-switch button {
+			margin-right: 10px;
+			background-color: #0c284799;
+			color:antiquewhite;
+			height: 25px;
+			width: 80px;
+			
+		}
+		#layer-switch button:hover {
+			background-color: #57c4d0;
+		}
     </style>
 </head>
 <body>
 	<input type='text' id='search-box' placeholder='请输入坐标，如：116.4074,39.9042' />
     <div id='map'></div>
+	<div id='layer-switch'>
+		<button id='streets'>街道</button>
+		<button id='satellite'>卫星</button>
+		<button id='dark'>黑色模式</button>
+		
+	</div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg';
         var map = new mapboxgl.Map({
@@ -76,6 +110,18 @@
 				alert('请输入坐标');
 			}
 		}
+	});
+
+	document.getElementById('streets').addEventListener('click', function() {
+		map.setStyle('mapbox://styles/mapbox/streets-v11');
+	});
+
+	document.getElementById('satellite').addEventListener('click', function() {
+		map.setStyle('mapbox://styles/mapbox/satellite-v9');
+	});
+
+	document.getElementById('dark').addEventListener('click', function() {
+		map.setStyle('mapbox://styles/mapbox/navigation-night-v1');
 	});
     </script>
 </body>
