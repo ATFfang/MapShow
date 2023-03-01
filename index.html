@@ -25,7 +25,7 @@
 			transform: translateX(-50%);
 			z-index: 2;
 			padding: 8px;
-			width: 250px;
+			width: 260px;
 			background-color: #b1e5f9;
 			border: 1px solid #120246;
 			border-radius: 4px;
@@ -58,11 +58,12 @@
 			color:antiquewhite;
 			height: 25px;
 			width: 80px;
-			
 		}
+
 		#layer-switch button:hover {
 			background-color: #57c4d0;
 		}
+
     </style>
 </head>
 <body>
@@ -72,6 +73,7 @@
 		<button id='streets'>街道</button>
 		<button id='satellite'>卫星</button>
 		<button id='dark'>黑色模式</button>
+		<button id='green'>绿色模式</button>
 		
 	</div>
     <script>
@@ -122,6 +124,10 @@
 
 	document.getElementById('dark').addEventListener('click', function() {
 		map.setStyle('mapbox://styles/mapbox/navigation-night-v1');
+	});
+
+	document.getElementById('green').addEventListener('click', function() {
+		map.setStyle('mapbox://styles/atfield2022/clepcn2wz000f01pori0ygb5z');
 	});
     </script>
 </body>
