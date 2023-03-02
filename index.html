@@ -64,6 +64,33 @@
 			background-color: #57c4d0;
 		}
 
+		#layer-location {
+			position: absolute;
+			top: 50px;
+			right: 10px;
+			z-index: 3;
+			padding: 10px;
+			background-color: #207ce600;
+			border: 1px solid #cccccc00;
+			border-radius: 4px;
+			font-size: 16px;
+			line-height: 1.5;
+			color: #3d48dc00;
+			outline: none;
+			flex-direction: column;
+		}
+		#layer-location button {
+			margin-right: 10px;
+			background-color: #1745521e;
+			color:rgb(21, 18, 33);
+			height: 25px;
+			width: 80px;
+		}
+
+		#layer-location button:hover {
+			background-color: #57c4d0;
+		}
+
     </style>
 </head>
 <body>
@@ -76,6 +103,9 @@
 		<button id='green'>绿色模式</button>
 		
 	</div>
+	<div id='layer-location'>
+		<button id="btn-locate">获取位置</button>
+	</div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg';
         var map = new mapboxgl.Map({
@@ -85,7 +115,31 @@
             zoom: 4
         });
 
-		
+		// 获取按钮和地图
+		const btnLocate = document.getElementById("btn-locate");
+
+
+		// 点击按钮获取设备位置
+		btnLocate.addEventListener("click", () => {
+    	// 获取当前位置
+    		navigator.geolocation.getCurrentPosition(
+        		position => {
+            	// 获取到位置后，在地图上标记该位置
+            		const lngLat = [position.coords.longitude, position.coords.latitude];
+            		map.setCenter(lngLat);
+            		new mapboxgl.Marker({
+    					color: "#ff0000",
+    					size: "large",
+    					symbol: "circle",
+    					rotation: 45
+					}).setLngLat(lngLat).addTo(map);
+        		},
+        		error => {
+            		console.log(`获取位置失败：${error.message}`);
+        		}
+    		);
+		});
+
         document.getElementById('search-box').addEventListener('keyup', function(e) {
 			if (e.keyCode === 13) { // 如果用户按下了回车键
 				var value = e.target.value;
