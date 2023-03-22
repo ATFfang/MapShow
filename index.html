@@ -88,7 +88,7 @@
 		}
 
 		#layer-location button:hover {
-			background-color: #57c4d0;
+			background-color: #57d0be;
 		}
 
     </style>
@@ -100,23 +100,24 @@
 		<button id='streets'>街道</button>
 		<button id='satellite'>卫星</button>
 		<button id='dark'>黑色模式</button>
-		<button id='green'>绿色模式</button>
-		
+		<button id='green'>绿色模式</button>	
 	</div>
 	<div id='layer-location'>
 		<button id="btn-locate">获取位置</button>
+		<button id="btn-yunhe">大运河</button>
 	</div>
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg';
         var map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/navigation-night-v1',
+            style: 'mapbox://styles/atfield2022/clez3q74n000w01qavf0as0an',
             center: [104.06667, 30.66667],
             zoom: 4
         });
 
 		// 获取按钮和地图
 		const btnLocate = document.getElementById("btn-locate");
+		const btnYunhe = document.getElementById("btn-yunhe");
 
 
 		// 点击按钮获取设备位置
@@ -138,6 +139,31 @@
             		console.log(`获取位置失败：${error.message}`);
         		}
     		);
+		});
+
+		btnYunhe.addEventListener("click", () => {
+			fetch('https://api.mapbox.com/datasets/v1/atfield2022/clf9famn21t8j2ap51y2col9n/features?access_token=pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg')
+ 				.then(response => response.json())
+ 				.then(data => {
+					map.addSource('your-data', {
+						'type': 'geojson',
+						'data': data
+					});
+					
+					map.addLayer({
+					'id': 'your-data2',
+					'type': 'line',
+					'source': 'your-data',
+					'paint': {
+  					 'line-width': 3,
+					 'line-color': '#400861'
+					}
+					});
+
+					
+
+				});
+    		
 		});
 
         document.getElementById('search-box').addEventListener('keyup', function(e) {
@@ -183,6 +209,7 @@
 	document.getElementById('green').addEventListener('click', function() {
 		map.setStyle('mapbox://styles/atfield2022/clepcn2wz000f01pori0ygb5z');
 	});
+	
     </script>
 </body>
 </html>
