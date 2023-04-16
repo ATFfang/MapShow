@@ -81,8 +81,9 @@
 		}
 		#layer-location button {
 			margin-right: 10px;
-			background-color: #1745521e;
-			color:rgb(21, 18, 33);
+			background-color: #105467d6;
+			color:rgb(255, 255, 255);
+			
 			height: 25px;
 			width: 80px;
 		}
@@ -91,9 +92,30 @@
 			background-color: #57d0be;
 		}
 
+		#section {
+      		overflow: auto;
+	    	align-items: center;
+	    	width: 200px;
+	    	height: 400px;
+      		padding: 20px;
+      		margin-bottom: 20px;
+      		background-color: #cf82ed25;
+      		border-radius: 5px;
+			z-index: 2;
+    	}
+		.section:hover {
+			transform: translateY(-10px);
+			box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+	  	}
+
     </style>
 </head>
 <body>
+	<select id="select-box">
+		<option value="option-1">Option 1</option>
+		<option value="option-2">Option 2</option>
+		<option value="option-3">Option 3</option>
+	</select>
 	<input type='text' id='search-box' placeholder='请输入坐标，如：116.4074,39.9042' />
     <div id='map'></div>
 	<div id='layer-switch'>
@@ -105,7 +127,9 @@
 	<div id='layer-location'>
 		<button id="btn-locate">获取位置</button>
 		<button id="btn-yunhe">大运河</button>
+		<button id="JS">江苏</button>
 	</div>
+	
     <script>
         mapboxgl.accessToken = 'pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg';
         var map = new mapboxgl.Map({
@@ -118,6 +142,7 @@
 		// 获取按钮和地图
 		const btnLocate = document.getElementById("btn-locate");
 		const btnYunhe = document.getElementById("btn-yunhe");
+		const btnJS= document.getElementById("JS");
 
 
 		// 点击按钮获取设备位置
@@ -159,11 +184,13 @@
 					 'line-color': '#400861'
 					}
 					});
+				});   		
+		});
 
-					
+		//打开江苏网页
 
-				});
-    		
+		btnJS.addEventListener('click', () => {
+  			window.open('indexjiangsu.html');
 		});
 
         document.getElementById('search-box').addEventListener('keyup', function(e) {

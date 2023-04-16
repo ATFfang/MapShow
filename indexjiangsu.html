@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8' />
+    <title>Mapbox Geo</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.4.0/mapbox-gl.css' rel='stylesheet' />
+	<script src='https://api.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+      /* 设置容器的样式 */
+      #main-container {
+		position: fixed;
+  		top: 0px;
+  		left: 0px;
+        width: 75%;
+        height: 75%;
+        margin: 0 auto;
+        background-color: #ccc;
+		outline: 6px solid rgb(62, 16, 75);
+		outline-offset: -1px;
+		z-index: 2;
+		display: flex;
+  		justify-content: center;
+  		align-items: center;
+      }
+
+	  #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 102.5%;
+			z-index: 3;
+        }
+		#map2 {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+			z-index: 3;
+        }
+
+	  #legend{
+			position: absolute;
+			top:7.5%;
+			right:5%;
+			width: 100px;
+			height: 180px;
+			z-index: 4;
+			background-color: #ccc;
+			border-radius: 10px;
+			display: grid;
+			justify-content: center;
+			text-align: left;
+			padding-top: 5px;
+  			padding-bottom: 5px;
+	    }
+		.legend-key {
+  			display: inline-block;
+  			border-radius: 20%;
+  			width: 10px;
+  			height: 10px;
+  			margin-right: 5px;
+		}
+
+		#layerlegendbutton{
+			position: absolute;
+  			float: right;
+  			top:2%;
+			right:5%;
+			width: 50px;
+			height: 30px;
+  			border: none;
+  			background-color: rgba(255, 255, 255, 0);
+			z-index: 6;
+			border-radius: 8px;
+	    }
+
+	  	#close-btn {
+			position: absolute;
+  			float: right;
+  			top:0%;
+			right:0%;
+			width: 100%;
+			height: 80%;
+  			border: none;
+  			background-color: rgb(255 255 255 / 75%);
+  			cursor: pointer;
+			z-index: 1;
+			border-radius: 18px;
+	   }
+
+	   #ifclose-btn {
+			position: absolute;
+  			float: right;
+  			margin-top: auto;
+			right:10%;
+			top:5%;
+			width: 20px;
+			height: 20px;
+  			background-color: #9ddb9d;
+			z-index: 2;
+			border-radius: 50%;
+			border: #9ddb9d;
+	   }
+
+      #right-container {
+		position: fixed;
+  		top: 0px;
+  		right: 0px;
+        width: 24.7%;
+        height: 100%;
+        float: right;
+        background-color: #04122bcc;
+		z-index: 3;
+      }
+
+	  #son-right-container1{
+		position: absolute;
+		top: 2%;
+  		right: 5%;
+		width: 90%;
+        height: 50px;
+		background-color: #5573a8f8;
+		z-index: 2;
+		border-radius: 10px;
+		text-align: center;
+		align-items: center;
+		overflow: hidden;
+	  }
+
+	  #son-right-container2{
+		position: absolute;
+		top: 14%;
+  		right: 5%;
+		width: 90%;
+        height: 30%;
+		background-color: #000000db;
+		z-index: 2;
+		border-radius: 10px;
+		text-align: center;
+		align-items: center;
+		overflow: hidden;
+	  }
+
+	  #son-right-container3{
+		position: absolute;
+		top: 14%;
+  		left:1%;
+		width: 40%;
+        height: 30px;
+		background-color: #4b4a4a00;
+		z-index: 2;
+		border-radius: 10px;
+		text-align: center;
+	  }
+
+	  #chart1-container{
+		position: absolute;
+		left:5%;
+        top: 5%;
+        width: 90%;
+        height: 90%;
+		border-radius: 10px;
+		background-color: #ffffff00;
+		z-index: 2;
+	  }
+
+	  #chart1 {
+		position: absolute;
+        margin: auto;
+        top: 0%;
+        width: 90%;
+        height: 200px;
+      }
+
+      #bottom-container {
+		position: absolute;
+  		bottom: 0px;
+		left:0px;
+        width: 75.3%;
+        height: 25%;
+        background-color: #272727;
+		z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 定义三个容器 -->
+    <div id="main-container">
+		<div id='legend'></div>
+		<div id="layerlegendbutton">
+			<p><span style="position:absolute ;font-family: fangsong;font-weight: bold;margin-left: -40px;margin-top: -12.5px;">图例</span></p>
+			<button id="close-btn"></button>
+			<button id="ifclose-btn"></button>
+		</div>
+		<div id='map'></div>
+    </div>
+    <div id="right-container">
+      <!-- 这里放置右侧的内容 -->
+		<div id="son-right-container1"></div>
+		<div id="son-right-container2">
+			<div id='map2'></div>
+		</div>
+		<div id="son-right-container3"></div>		
+    </div>
+    <div id="bottom-container">
+		<!-- 这里放置底部的内容 -->
+		<div id="chart1-container">
+			<canvas id="chart1"></canvas>
+		</div>  
+    </div>
+	
+	<script>
+		mapboxgl.accessToken = 'pk.eyJ1IjoiYXRmaWVsZDIwMjIiLCJhIjoiY2xlZjFodW1lMDR3dTNvbXVvajMwNGxzZSJ9.1FnjGYOuY7l-Us1SFatgKg';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/atfield2022/clgeezmvx000201muh2vyqpb8',
+            center: [120,32.8],
+            zoom: 6
+        });
+
+		var map2 = new mapboxgl.Map({
+            container: 'map2',
+            style: '',
+            center: [120,32.8],
+            zoom: 6
+        });
+
+		
+		const closeButton = document.getElementById('close-btn');
+		const ifcloseButton = document.getElementById('ifclose-btn');
+		const legend = document.getElementById('legend');
+		
+		//加载图例,图表
+		map.on('load', () => {
+  			// the rest of the code will go in here
+			const layers = [
+  				'3m-4m',
+  				'4m-5m',
+  				'5m-6m',
+  				'6m-7m',
+  				'7m-8m',
+  				'8m-9m',
+  				'9m-10m',
+  				'10m+'
+			];
+			const colors = [
+  				'#c3dfb9',
+  				'#b4d7a8',
+  				'#9fcc8f',
+  				'#8dc27a',
+  				'#84bd70',
+  				'#61a14a',
+  				'#548c40',
+  				'#447033'
+			];
+
+			layers.forEach((layer, i) => {
+  				const color = colors[i];
+  				const item = document.createElement('div');
+  				const key = document.createElement('span');
+  				key.className = 'legend-key';
+  				key.style.backgroundColor = color;
+				
+
+  				const value = document.createElement('span');
+  				value.innerHTML = `${layer}`;
+  				item.appendChild(key);
+  				item.appendChild(value);
+  				legend.appendChild(item);
+			
+			});
+
+			
+			
+		});
+		
+		//关闭图例
+		ifcloseButton.addEventListener("click", () => {
+  			if (legend.style.display === 'none') {
+    			//location.reload();
+				legend.style.display = 'grid';
+				legend.style.justifycontent='center';
+				ifcloseButton.style.backgroundColor="#9ddb9d";
+				ifcloseButton.style.right="10%";
+
+  			} else {
+    			legend.style.display = 'none';
+				ifcloseButton.style.backgroundColor="rgb(129, 129, 129)";
+				ifcloseButton.style.right="55%"
+  			}
+		});
+
+		
+		//鼠标放置显示
+		map.on('mousemove', (event) => {
+  			const states = map.queryRenderedFeatures(event.point, {
+    			layers: ['jiangsu-244odb']
+  			});
+  			document.getElementById('son-right-container1').innerHTML = states.length
+    		? `<p><span style="font-weight: bold;">${states[0].properties.NAME}${states[0].properties.city_pop}万人口</span></p>`
+    		: `<p>Hover over a state!</p>`;
+		});
+
+		//鼠标点击显示
+
+		map.on('click', (event) => {
+			const states = map.queryRenderedFeatures(event.point, {
+    			layers: ['jiangsu-244odb']
+  			});
+
+  			fetch('https://raw.githubusercontent.com/ATFfang/MapShow/main/jiangsu.geojson')
+ 				.then(response => response.json())
+ 				.then(data => {
+					map2.remove();
+					map2 = new mapboxgl.Map({
+            			container: 'map2',
+            			style: '',
+            			center: [120,32.8],
+            			zoom: 6
+        			});
+					
+					map2.addSource('your-data', {
+						'type': 'geojson',
+						'data': data
+					});
+					
+					
+					map2.addLayer({
+						'id': 'your-data2',
+						'type': 'fill',
+						'source': 'your-data',
+						'paint': {
+					 		'fill-color': '#400861'
+						},
+						'filter': ['==','NAME', states[0].properties.NAME]
+					});
+
+					data.features.forEach(feature => {
+  						if (feature.properties.NAME === states[0].properties.NAME) {
+    						map2.fitBounds(turf.bbox(feature), {padding: 20});
+							document.getElementById('son-right-container3').innerHTML = `<p><span style="font-weight: bold;color:#b12701;">${feature.properties.NAME}</span></p>`;
+  						}
+					});									
+			});								
+		});   	
+
+		//图表
+		window.onload = function() {
+        // 在这里编写需要在页面加载完成后执行的代码
+		// 获取 canvas 元素
+		function randomColor() {
+  			return '#' + Math.floor(Math.random() * 16777215).toString(16);
+		}
+
+
+		const canvas = document.getElementById('chart1');
+			//存储地区要素名
+			let featureName=[]
+			//存储地区人口
+			let featurePerson=[]
+			//储存颜色
+			let backgroundColorlist=[]
+			//获取数据
+			fetch('https://raw.githubusercontent.com/ATFfang/MapShow/main/jiangsu.geojson')
+ 				.then(response => response.json())
+ 				.then(data => {
+					data.features.forEach(feature => {
+						featureName.push(feature.properties.NAME);
+						featurePerson.push(feature.properties.city_pop);
+						backgroundColorlist.push(randomColor());
+						
+
+					})
+
+					// 创建 Chart 实例
+					const myChart = new Chart(canvas, {
+  						type: 'bar',
+  						data: {
+    						labels: featureName,
+    						datasets: [{
+								label: 'Population',
+      							data: featurePerson,
+      							backgroundColor: 'rgba(255, 99, 132, 0.2)',
+      							backgroundColor: backgroundColorlist,
+      							borderWidth: 1
+    						}]
+  						},
+  						options: {
+							responsive: true,
+        					maintainAspectRatio: false,
+    						
+							legend: {
+								display:true,
+								labels: {
+        							fontColor: "rgb(255 255 255)"// 修改标注字体颜色为红色
+      							}
+ 							},
+							backgroundColor: 'rgb(255, 255, 255)',					
+  						}
+					});
+				})
+      	}
+
+	</script>
+  </body>
+</html>
+
+
+
